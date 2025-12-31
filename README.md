@@ -1,39 +1,48 @@
-SearchDesk
 
-Video demo: 
-Author: Oleg Nikeshin
-Location: Ulyanovsk, Russia
-Date: 2025-12-31
+SearchDesk — это небольшое веб-приложение на Flask и SQLite, демонстрирующее
+упрощённый подход к searchandising: управлению товарами, настройке правил
+ранжирования и визуальной проверке того, как эти правила влияют на порядок
+результатов поиска.
 
-SearchDesk is a small web application built with Flask and SQLite.  
-The project demonstrates a simplified searchandising workflow: managing
-products, defining search rules, and previewing how those rules affect
-search result ranking.
+Основная цель проекта — показать, как логика ранжирования может настраиваться
+через конфигурируемые бизнес-правила, а не быть жёстко зашитой в код. Такой
+подход широко используется в e-commerce системах, где важно быстро управлять
+приоритетами товаров без изменения приложения.
 
-The application requires authentication. After logging in, a user can
-add products to a catalog, define rules for specific search queries, and
-test how products are ranked for a given query.
+Приложение требует авторизации. После входа пользователь может управлять
+каталогом товаров: добавлять и удалять товары, а также задавать для них
+атрибуты, такие как бренд, категория, пол, размер, цвет, цена и наличие
+на складе. Все данные хранятся в базе SQLite.
 
-Products can be boosted by different attributes such as brand, gender,
-and category. Rules support two matching modes: exact match and contains
-match. For each rule, products can also be pinned to fixed positions so
-they always appear at the top of the ranking.
+Ключевая часть проекта — система правил. Правила определяют, как должны
+изменяться результаты поиска для конкретного запроса. Каждое правило
+поддерживает два режима сопоставления:
+- exact — запрос должен полностью совпадать с текстом правила
+- contains — запрос содержит текст правила как подстроку
 
-When a query is entered on the ranking page, the application selects the
-most appropriate rule, applies pinned products first, calculates a score
-for the remaining products, and sorts the results accordingly. Each row
-includes a short explanation showing why a product received its score.
+Правила позволяют задавать числовые бусты для различных атрибутов товаров,
+таких как бренд, категория и пол. Все бусты суммируются в итоговый score
+товара. Дополнительно правило может включать режим «in-stock first», при
+котором товары в наличии получают большой приоритет.
 
-The project uses Python, Flask, SQLite, Jinja templates, and Bootstrap for
-the user interface.
+Также реализована возможность закрепления товаров (pinning). Закреплённые
+товары всегда отображаются в начале списка результатов для конкретного
+правила и не участвуют в обычной логике подсчёта score. Это моделирует
+бизнес-сценарии вроде продвижения отдельных товаров или маркетинговых акций.
 
-Project structure:
-- app.py: main Flask application and routing logic
-- helpers.py: database helper, authentication decorator, boost parsing
-- templates/: HTML templates for all pages
-- static/styles.css: custom styles
-- data.db: SQLite database
+На странице ранжирования пользователь вводит поисковый запрос, после чего
+приложение выбирает наиболее подходящее правило, применяет закреплённые
+товары, рассчитывает score для остальных и сортирует результаты. Для
+прозрачности логики рядом с каждым товаром отображается пояснение, почему
+он получил именно такой score.
 
-AI tools were used in a limited way for UI layout ideas and for general
-questions about SQLite schema design. All application logic and final
-implementation were written by me.
+Проект реализован с использованием Python, Flask, SQLite, Jinja-шаблонов и
+Bootstrap. Он демонстрирует базовые концепции веб-разработки, работы с БД,
+аутентификации, серверного рендеринга и реализации настраиваемой бизнес-логики.
+
+Структура проекта:
+- app.py — основной файл Flask-приложения, маршруты и логика ранжирования
+- helpers.py — работа с БД, декоратор авторизации, разбор строк с бустами
+- templates/ — HTML-шаблоны всех страниц
+- static/styles.css — пользовательские стили
+- data.db — база данных SQLite
