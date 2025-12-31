@@ -1,0 +1,14 @@
+.login {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#login, #error, #index_table, #ranking {
+    text-align: center;
+}
+
+.product_title {
+    font-size: 18px;
+}

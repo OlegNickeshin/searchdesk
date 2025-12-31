@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h3 class="mb-0">FAQ</h3>
+</div>
+
+<div class="accordion" id="faqAccordion">
+
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="q1">
+            <button class="accordion-button" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#a1">
+                How does ranking work?
+            </button>
+        </h2>
+        <div id="a1" class="accordion-collapse collapse show"
+             data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+                Products are selected using text matching (title, brand, category).
+                If a rule matches the query, it is applied first. Pinned products are
+                always shown on top, then the rest are sorted by score.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="q2">
+            <button class="accordion-button collapsed" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#a2">
+                What is a rule?
+            </button>
+        </h2>
+        <div id="a2" class="accordion-collapse collapse"
+             data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+                A rule defines how search results should be boosted for a specific query.
+                Rules can use <strong>exact</strong> or <strong>contains</strong> matching
+                and apply different boosts.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="q3">
+            <button class="accordion-button collapsed" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#a3">
+                What are boosts?
+            </button>
+        </h2>
+        <div id="a3" class="accordion-collapse collapse"
+             data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+                Boosts increase the score of products that match certain attributes
+                (brand, category, gender). Format example:
+                <code>Nike:50,Adidas:20</code>.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="q4">
+            <button class="accordion-button collapsed" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#a4">
+                What does “In-stock first” mean?
+            </button>
+        </h2>
+        <div id="a4" class="accordion-collapse collapse"
+             data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+                When enabled, products that are in stock receive a large score boost
+                and appear higher in the results.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="q5">
+            <button class="accordion-button collapsed" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#a5">
+                What is pinning?
+            </button>
+        </h2>
+        <div id="a5" class="accordion-collapse collapse"
+             data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+                Pinning forces a product to appear at the top of the ranking
+                for a specific rule. Lower position number means higher placement.
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,208 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h3 class="mb-0">Products</h3>
+        <button class="btn btn-outline-dark" type="button"
+                data-bs-toggle="modal" data-bs-target="#addProductModal">
+            Add
+        </button>
+    </div>
+
+    <section class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+                <tr class="product_title">
+                    <th>
+                        <a class="link-dark text-decoration-none"
+                           href="/products?sort=title&order={{ 'desc' if order == 'asc' else 'asc' }}">
+                            Product
+                        </a>
+                    </th>
+                    <th>
+                        <a class="link-dark text-decoration-none"
+                           href="/products?sort=brand&order={{ 'desc' if order == 'asc' else 'asc' }}">
+                            Brand
+                        </a>
+                    </th>
+                    <th>
+                        <a class="link-dark text-decoration-none"
+                           href="/products?sort=category&order={{ 'desc' if order == 'asc' else 'asc' }}">
+                            Category
+                        </a>
+                    </th>
+                    <th>
+                        <a class="link-dark text-decoration-none"
+                           href="/products?sort=gender&order={{ 'desc' if order == 'asc' else 'asc' }}">
+                            Gender
+                        </a>
+                    </th>
+                    <th class="text-end">
+                        <a class="link-dark text-decoration-none"
+                           href="/products?sort=size&order={{ 'desc' if order == 'asc' else 'asc' }}">
+                            Size (EU)
+                        </a>
+                    </th>
+                    <th>
+                        <a class="link-dark text-decoration-none"
+                           href="/products?sort=color&order={{ 'desc' if order == 'asc' else 'asc' }}">
+                            Color
+                        </a>
+                    </th>
+                    <th class="text-end">
+                        <a class="link-dark text-decoration-none"
+                           href="/products?sort=price&order={{ 'desc' if order == 'asc' else 'asc' }}">
+                            Price
+                        </a>
+                    </th>
+                    <th>
+                        <a class="link-dark text-decoration-none"
+                           href="/products?sort=status&order={{ 'desc' if order == 'asc' else 'asc' }}">
+                            Status
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in rows %}
+                    <tr>
+                        <td>{{ p["title"] }}</td>
+                        <td>{{ p["brand"] }}</td>
+                        <td>{{ p["category"] }}</td>
+                        <td>{{ p["gender"] }}</td>
+                        <td class="text-end">{{ p["size_eu"] }}</td>
+                        <td>{{ p["color"] or "-" }}</td>
+                        <td class="text-end">€{{ "%.2f"|format((p["price_cents"] or 0) / 100) }}</td>
+                        <td>
+                            {% if p["in_stock"] == 1 %}
+                                <span class="badge text-bg-success">in stock</span>
+                            {% else %}
+                                <span class="badge text-bg-secondary">out</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form method="post"
+                                  action="/products/{{ p['id'] }}/delete"
+                                  onsubmit="return confirm('Delete this product?');">
+                                <button class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form class="modal-content" method="post" action="/products/new">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    {% if error %}
+                        <div class="alert alert-danger py-2"
+                             role="alert"
+                             id="error">{{ error }}</div>
+                    {% endif %}
+
+                    <div class="mb-2">
+                        <label class="form-label">Title</label>
+                        <input name="title" class="form-control"
+                               required maxlength="100">
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label">Brand</label>
+                        <select name="brand" class="form-select" required>
+                            <option value="" selected disabled>Choose…</option>
+                            <option>Nike</option>
+                            <option>Adidas</option>
+                            <option>ASICS</option>
+                            <option>New Balance</option>
+                            <option>Hoka</option>
+                            <option>Reebok</option>
+                            <option>Puma</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label">Category</label>
+                        <select name="category" class="form-select" required>
+                            <option value="" selected disabled>Choose…</option>
+                            <option>Running</option>
+                            <option>Lifestyle</option>
+                            <option>Training</option>
+                            <option>Trail</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label">Gender</label>
+                        <select name="gender" class="form-select" required>
+                            <option value="" selected disabled>Choose…</option>
+                            <option value="man">man</option>
+                            <option value="woman">woman</option>
+                            <option value="unisex">unisex</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label">Size (EU)</label>
+                        <input name="size_eu" type="number"
+                               class="form-control"
+                               min="20" max="60" step="1" required>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label">Color</label>
+                        <input name="color" class="form-control"
+                               maxlength="50"
+                               placeholder="e.g. Black / White / Green">
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label">Price (€)</label>
+                        <input name="price" type="number"
+                               step="0.01" min="0"
+                               class="form-control" required>
+                    </div>
+
+                    <div class="form-check mt-2">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               id="in_stock"
+                               name="in_stock"
+                               value="1"
+                               checked>
+                        <label class="form-check-label" for="in_stock">
+                            In stock
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if show_add_modal %}
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                new bootstrap.Modal(
+                    document.getElementById("addProductModal")
+                ).show();
+            });
+        </script>
+    {% endif %}
+
+{% endblock %}
